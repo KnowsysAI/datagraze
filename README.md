@@ -1,5 +1,32 @@
 # datagraze
 
+```
+{
+  "title": "title-stuff",
+  "link": "link-stuff.com",
+  "keywords": ["stuff", "more stuff", "even more sruff"],
+  "description": "short stuff",
+  "content": "either content or move full desc stuff",
+  "pubDate": "2021-10-26 09:07:26",
+  "image_url": "image-stuff.com",
+  "source_id": "sourceStuff",
+  "translation": {
+    "aws":{
+      "title": "stuff",
+      "keywords": ["stuff", "more stuff", "even more sruff"],
+      "description": "short stuff",
+      "content": "either content or move full desc"
+    },
+    "google":{
+      "title": "stuff",
+      "keywords": ["stuff", "more stuff", "even more sruff"],
+      "description": "short stuff",
+      "content": "either content or move full desc"
+    }
+  }
+}
+```
+
 Start with smallest dataset.
 
 For each article in dataset, translate data into english via Amazon Translate service.
