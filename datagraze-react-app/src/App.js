@@ -1,25 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react"
 
-function App() {
+export default function App() {
+    // const [searchTerm, setSearchTerm] = ""
+    // const [opensearchResults, setOpensearchResults] = []
+    // const [documentResult, setDocumentResults] = {}
+
+    useEffect(() =>{
+        let url = 'https://5pgwaiwj32.execute-api.us-east-1.amazonaws.com/spike/opensearch';
+
+        fetch(url, {
+          method: "GET",
+          headers: {"Content-type": "application/json;charset=UTF-8", "Access-Control-Allow-Origin": '*'}
+        })
+          .then(resp => resp.json())
+          .then(json => console.log(json))
+        })
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+        <h1>hello world!</h1>
+    </>
+  )
 }
-
-export default App;
