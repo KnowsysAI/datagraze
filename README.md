@@ -1,5 +1,32 @@
 # datagraze
 
+```
+{
+  "title": "title-stuff",
+  "link": "link-stuff.com",
+  "keywords": ["stuff", "more stuff", "even more sruff"],
+  "description": "short stuff",
+  "content": "either content or move full desc stuff",
+  "pubDate": "2021-10-26 09:07:26",
+  "image_url": "image-stuff.com",
+  "source_id": "sourceStuff",
+  "translation": {
+    "aws":{
+      "title": "stuff",
+      "keywords": ["stuff", "more stuff", "even more sruff"],
+      "description": "short stuff",
+      "content": "either content or move full desc"
+    },
+    "google":{
+      "title": "stuff",
+      "keywords": ["stuff", "more stuff", "even more sruff"],
+      "description": "short stuff",
+      "content": "either content or move full desc"
+    }
+  }
+}
+```
+
 Start with smallest dataset.
 
 For each article in dataset, translate data into english via Amazon Translate service.
@@ -59,3 +86,15 @@ RESULT:
 6. Link to view { content || full_description (if content == null) } translated into english
 7. image_url
 8. link 
+
+Managing Amazon DocumentDB indexes
+https://docs.aws.amazon.com/documentdb/latest/developerguide/managing-indexes.html
+
+Load Source Data into Document DB
+JSON => Python Script (++ LangDetect) => Document DB (out: ID) => Python Script => Log File
+
+Translate Source Data and update DocumentDB
+Document DB QUERY(language != English) OUT: list of ID => forEach(ID) AWS Translate Svc... OUT: translation => Python Script... UPDATE RECORD(ID) => Document DB => Python Script => Log File
+
+Index Data
+Document DB => Python Script (if !english => record.translation{"aws":"abcdefg...") => OpenSearch Index => Python Script => Log File
