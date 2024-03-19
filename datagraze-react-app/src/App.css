@@ -1,0 +1,12 @@
+body {
+    font-family: Arial;
+}
+
+.align{
+    width: calc(25% - 20px);
+    margin-top: 25px;
+  }
+
+.input-align{
+    width: calc(25% - 85px)
+}

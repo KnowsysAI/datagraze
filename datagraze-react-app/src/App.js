@@ -1,16 +1,25 @@
 import React, { useEffect, useState } from "react"
+import './App.css'
+
+function radioButton(field, isChecked) {
+  return <div>
+    <input type="radio" id={field} name="field" value={field} checked={isChecked}/>
+    <label for={field}>{field}</label>
+  </div>
+}
 
 export default function App() {
   const [searchTerm, setSearchTerm] = useState("")
   const [opensearchResults, setOpensearchResults] = useState()
   const [documentResult, setDocumentResult] = useState()
+  const [searchField, setSearchField] = useState("title")
+  const [isChecked, setIsChecked] = useState("checked")
 
   useEffect(() => {
   }, [])
 
   function getOpenSearchDocs(searchTerm) {
-    console.log("opensearch function ran")
-    let opensearchUrl = `https://5pgwaiwj32.execute-api.us-east-1.amazonaws.com/spike/opensearch?q=${searchTerm}`;
+    let opensearchUrl = `https://5pgwaiwj32.execute-api.us-east-1.amazonaws.com/spike/opensearch?searchstring=${searchTerm}&${searchField !== "all" ? `fields=${searchField}` : "fields=title&fields=description&fields=content&fields=keywords"}`
     fetch(opensearchUrl, {
       method: "GET",
       headers: {
@@ -36,9 +45,22 @@ export default function App() {
 
   return (
     <>
-      <h1>hello world!</h1>
-      <input type="text" value={searchTerm} onChange={(event) => { setSearchTerm(event.target.value) }} />
+      <h1>Datagraze</h1>
+      <input class="input-align" type="text" value={searchTerm} onChange={(event) => { setSearchTerm(event.target.value) }} />
       <button onClick={() => getOpenSearchDocs(searchTerm)}>search</button>
+      <form class="align" onChange={event => {setSearchField(event.target.value)}}>
+        <fieldset>
+          <legend>Select a search field</legend>
+          {radioButton("title", isChecked)}
+          {radioButton("description")}
+          {radioButton("content")}
+          {radioButton("keywords")}
+          {radioButton("all")}
+        </fieldset>
+      </form>
+      <p>{opensearchResults !== undefined ? `${opensearchResults.length} results found` : ""}</p>
+      <hr />
+      {/* doc db section */}
       {documentResult === undefined
         ? null
         : <div>
@@ -48,34 +70,35 @@ export default function App() {
             ? null
             : <div>
               <h3>{documentResult.translations.libretranslate.title}</h3>
-              <p>Description: {documentResult.translations.libretranslate.description}</p>
-              <p>Content: {documentResult.translations.libretranslate.content}</p>
-              <p>Keywords: {documentResult.translations.libretranslate.keywords !== null ? documentResult.translations.libretranslate.keywords.join(", ") : "none"}</p>
+              {documentResult.translations.libretranslate.description != null ? <p>Description: {documentResult.translations.libretranslate.description}</p> : null}
+              {documentResult.translations.libretranslate.content != null ? <p>Content: {documentResult.translations.libretranslate.content}</p> : null}
+              {documentResult.translations.libretranslate.keywords !== null ? <p>Keywords: {documentResult.translations.libretranslate.keywords.join(", ")}</p> : null}
+              <hr />
             </div>
           }
           <div>
-            <h5>{documentResult.title}</h5>
-            <p>Language: {documentResult.language}</p>
+            <h3>{documentResult.title}</h3>
+            <p>Original Language: {documentResult.language}</p>
             <p>Publish date: {documentResult.pubDate}</p>
-            <p>Description: {documentResult.description}</p>
-            <p>Content: {documentResult.content}</p>
-            <p>Keywords: {documentResult.keywords !== null ? documentResult.keywords.join(", ") : "none"}</p>
-            <p>Source id: {documentResult.source_id}</p>
-            <p>Link: {documentResult.link}</p>
+            {documentResult.description != null ? <p>Description: {documentResult.description}</p> : null}
+            {documentResult.content != null ? <p>Content: {documentResult.content}</p> : null}
+            {documentResult.keywords != null ? <p>Keywords: {documentResult.keywords.join(", ")}</p> : null}
+            <p>Source ID: {documentResult.source_id}</p>
+            <p>Link: <a href={documentResult.link} target="_blank">{documentResult.link}</a></p>
           </div>
         </div>
       }
-      {opensearchResults === undefined
+      {/* opensearch secction */}
+      {(opensearchResults === undefined || documentResult !== undefined)
         ? null
         : <div>
-          {opensearchResults.map(doc => {
+          {opensearchResults.map((doc, index) => {
             return (
               <div key={doc._id}>
-                <button onClick={(event) => {getDocdb(doc._id); window.scrollTo(0, 0)}}>{doc._source.title}</button>
-                <p>description: {doc._source.description}</p>
-                <p>original lan: {doc._source.language}</p>
-                <p>publish date: {doc._source.pubDate}</p>
-                <p>keywords: {doc._source.keywords != null ? doc._source.keywords.join(", ") : ""}</p>
+                <button style={{fontSize: "1.2em"}} onClick={(event) => getDocdb(doc._id)}>{index+1}: {doc._source.title}</button>
+                {doc._source.description != null ? <p>Description: {doc._source.description}</p> : null}
+                {doc._source.keywords != null ? <p>Keywords: {doc._source.keywords.join(", ")}</p> : null}
+                <hr />
               </div>
             )
           })}
@@ -84,3 +107,4 @@ export default function App() {
     </>
   )
 }
+
