@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react"
 import './App.css'
 
-function radioButton(field, isChecked) {
+function radioButton(field) {
   return <div>
-    <input type="radio" id={field} name="field" value={field} checked={isChecked}/>
+    <input type="radio" id={field} name="field" value={field} />
     <label for={field}>{field}</label>
   </div>
 }
@@ -13,7 +13,6 @@ export default function App() {
   const [opensearchResults, setOpensearchResults] = useState()
   const [documentResult, setDocumentResult] = useState()
   const [searchField, setSearchField] = useState("title")
-  const [isChecked, setIsChecked] = useState("checked")
 
   useEffect(() => {
   }, [])
@@ -47,11 +46,11 @@ export default function App() {
     <>
       <h1>Datagraze</h1>
       <input class="input-align" type="text" value={searchTerm} onChange={(event) => { setSearchTerm(event.target.value) }} />
-      <button onClick={() => getOpenSearchDocs(searchTerm)}>search</button>
-      <form class="align" onChange={event => {setSearchField(event.target.value)}}>
+      <button onClick={() => {getOpenSearchDocs(searchTerm)}}>search</button>
+      <form class="align" onChange={event => { setSearchField(event.target.value) }}>
         <fieldset>
           <legend>Select a search field</legend>
-          {radioButton("title", isChecked)}
+          {radioButton("title")}
           {radioButton("description")}
           {radioButton("content")}
           {radioButton("keywords")}
@@ -95,7 +94,7 @@ export default function App() {
           {opensearchResults.map((doc, index) => {
             return (
               <div key={doc._id}>
-                <button style={{fontSize: "1.2em"}} onClick={(event) => getDocdb(doc._id)}>{index+1}: {doc._source.title}</button>
+                <button style={{ fontSize: "1.2em" }} onClick={(event) => getDocdb(doc._id)}>{index + 1}: {doc._source.title}</button>
                 {doc._source.description != null ? <p>Description: {doc._source.description}</p> : null}
                 {doc._source.keywords != null ? <p>Keywords: {doc._source.keywords.join(", ")}</p> : null}
                 <hr />
